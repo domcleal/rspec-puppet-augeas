@@ -10,16 +10,27 @@ module RSpec::Puppet::Augeas
       #     :fixture =>
       #       String -> relative path of source fixture file
       #       Hash   -> { "/dest/path" => "source/fixture/path", ... }
+      #     :target  => path of destination file to be modified
+      #     :lens    => lens used for opening target
       def run_augeas(*args, &block)
         options = args.last.is_a?(::Hash) ? args.pop : {}
-        fixture = options.delete(:fixture)
 
         title = "Augeas[#{args.shift}]"
         describe(title, *args, :type => :augeas) do
           # inside here (the type augeas block), subject will be initialised
           # to the augeas resource object
 
-          # initialise fixture to the argument passed into the run_augeas block
+          # initialise arguments passed into the run_augeas block
+          # TODO: target can be initialised from incl if available
+          target = options.delete(:target)
+          let(:target) { target }
+
+          # TODO: ditto
+          lens = options.delete(:lens)
+          let(:lens) { lens }
+
+          fixture = options.delete(:fixture)
+          fixture = { target => fixture } if fixture.is_a? String and target
           let(:fixture) { fixture }
 
           class_exec(&block)
@@ -44,13 +55,6 @@ module RSpec::Puppet::Augeas
 
       def output_root
         subject.root
-      end
-
-      def open_output(file)
-        f = File.open(File.join(output_root, file))
-        return f unless block_given?
-        yield f
-        f.close
       end
     end
   end

@@ -55,33 +55,5 @@ module RSpec::Puppet::Augeas
       catalog = catalog.to_ral if resource.is_a? Puppet::Resource
       catalog.apply
     end
-
-    # Open Augeas on a given file.  Used for testing the results of running
-    # Puppet providers.
-    def aug_open(file, lens, &block)
-      aug = Augeas.open(nil, AugeasProviders::Provider.loadpath, Augeas::NO_MODL_AUTOLOAD)
-      begin
-        aug.transform(
-          :lens => lens,
-          :name => lens.split(".")[0],
-          :incl => file
-        )
-        aug.set("/augeas/context", "/files#{file}")
-        aug.load!
-        raise AugeasSpec::Error, "Augeas didn't load #{file}" if aug.match(".").empty?
-        yield aug
-      rescue Augeas::Error
-        errors = []
-        aug.match("/augeas//error").each do |errnode|
-          aug.match("#{errnode}/*").each do |subnode|
-            subvalue = aug.get(subnode)
-            errors << "#{subnode} = #{subvalue}"
-          end
-        end
-        raise AugeasSpec::Error, errors.join("\n")
-      ensure
-        aug.close
-      end
-    end
   end
 end

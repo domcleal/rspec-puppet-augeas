@@ -63,10 +63,14 @@ fixtures directory.
 
 * run_augeas
   * fixtures
+  * target, lens
 * execute
   * with_change
   * idempotently
-* aug_get, aug_match
+* TestUtils
+  * output_root, open_target
+  * aug_open, aug_get, aug_match
+  * augparse, augparse_filter
 
 ## Issues
 
