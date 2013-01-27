@@ -45,10 +45,9 @@ module RSpec::Puppet::Augeas
       # that the parent example group subject is a catalog (use rspec-puppet)
       def subject
         unless @resource
-          catalog = super
           title = self.class.description
           title = $1 if title =~ /^Augeas\[(.*)\]$/
-          @resource = Resource.new(catalog.resource('Augeas', title), fixture)
+          @resource = Resource.new(catalogue.resource('Augeas', title), fixture)
         end
         @resource
       end

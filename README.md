@@ -16,8 +16,6 @@ Install the gem first:
 
     gem install rspec-puppet-augeas
 
-(Note: this currently requires an unreleased version of rspec-core.)
-
 Extend your usual rspec-puppet class test, e.g. for the 'sshd' class:
 
     $ cat spec/classes/sshd_config_spec.rb

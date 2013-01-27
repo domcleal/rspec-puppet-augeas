@@ -25,7 +25,6 @@ Gem::Specification.new do |s|
   ]
 
   s.add_dependency 'rspec-puppet'
-  s.add_dependency 'rspec-core'
 
   s.authors = ['Dominic Cleal']
   s.email = 'dcleal@redhat.com'
