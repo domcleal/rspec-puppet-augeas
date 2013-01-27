@@ -41,6 +41,17 @@ module RSpec::Puppet::Augeas
         end
         @resource
       end
+
+      def output_root
+        subject.root
+      end
+
+      def open_output(file)
+        f = File.open(File.join(output_root, file))
+        return f unless block_given?
+        yield f
+        f.close
+      end
     end
   end
 end
