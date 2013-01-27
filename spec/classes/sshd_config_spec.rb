@@ -14,7 +14,7 @@ describe 'sshd' do
     end
   end
 
-  run_augeas 'root login', :fixture => { '/etc/ssh/sshd_config' => '/etc/ssh/sshd_config_2' } do
+  run_augeas 'root login', :fixture => { 'etc/ssh/sshd_config' => 'etc/ssh/sshd_config_2' } do
     it 'should test resource with second fixture' do
       #aug_get('#comment[1]').should == 'Fixture 2'
       should execute.with_change
