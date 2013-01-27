@@ -30,8 +30,9 @@ module RSpec::Puppet::Augeas
       file = "/#{file}" unless file.start_with? '/'
       lens = opts[:lens] || self.lens or raise ArgumentError, ":lens must be supplied"
       lens = "#{lens}.lns" unless lens.include? '.'
+      root = opts[:root] || self.output_root
 
-      aug = Augeas.open(self.output_root, nil, Augeas::NO_MODL_AUTOLOAD)
+      aug = Augeas.open(root, nil, Augeas::NO_MODL_AUTOLOAD)
       begin
         aug.transform(
           :lens => lens,
@@ -57,15 +58,14 @@ module RSpec::Puppet::Augeas
     end
 
     # Creates a simple test file, reads in a fixture (that's been modified by
-    # the provider) and runs augparse against the expected tree.
-    def augparse(opts = {})
+    # the resource) and runs augparse against the expected tree.
+    def augparse(result = "?", opts = {})
       file = opts[:target] || self.target or raise ArgumentError, ":target must be supplied"
-      file = File.join(self.output_path, file) unless file.start_with? '/'
+      file = File.join(self.output_root, file) unless file.start_with? '/'
       lens = opts[:lens] || self.lens or raise ArgumentError, ":lens must be supplied"
       lens = "#{lens}.lns" unless lens.include? '.'
-      result = opts[:result] || "?"
 
-      Dir.mktmpdir { |dir|
+      Dir.mktmpdir("rpa-augparse") do |dir|
         # Augeas always starts with a blank line when creating new files, so
         # reprocess file and remove it to make writing tests easier
         File.open("#{dir}/input", "w") do |finput|
@@ -77,18 +77,18 @@ module RSpec::Puppet::Augeas
         end
 
         # Test module, Augeas reads back in the input file
-        testaug = "#{dir}/test_augeasproviders.aug"
-        File.open(testaug, "w") { |tf|
+        testaug = "#{dir}/test_rspec_puppet_augeas.aug"
+        File.open(testaug, "w") do |tf|
           tf.write(<<eos)
-module Test_Augeasproviders =
+module Test_Rspec_Puppet_Augeas =
   test #{lens} get Sys.read_file "#{dir}/input" =
     #{result}
 eos
-        }
+        end
 
         output = %x(augparse #{testaug} 2>&1)
         raise RSpec::Puppet::Augeas::Error, "augparse failed:\n#{output}" unless $? == 0 && output.empty?
-      }
+      end
     end
 
     # Takes a full fixture file, loads it in Augeas, uses the relative path
@@ -98,23 +98,21 @@ eos
     #
     # Because the filtered fragment is saved in a new file, seq labels will reset
     # too, so it'll be "1" rather than what it was in the original fixture.
-    def augparse_filter(opts = {})
+    def augparse_filter(filter = "*[label()!='#comment']", result = "?", opts = {})
       file = opts[:target] || self.target or raise ArgumentError, ":target must be supplied"
-      file = File.join(self.output_path, file) unless file.start_with? '/'
+      file = File.join(self.output_root, file) unless file.start_with? '/'
       lens = opts[:lens] || self.lens or raise ArgumentError, ":lens must be supplied"
       lens = "#{lens}.lns" unless lens.include? '.'
-      filter = opts[:filter] or raise ArgumentError, ":filter must be supplied"
-      result = opts[:result] || "?"
 
       # duplicate the original since we use aug.mv
-      tmpin = Tempfile.new("original")
+      tmpin = Tempfile.new("rpa-original")
       tmpin.write(File.read(file))
       tmpin.close
 
-      tmpout = Tempfile.new("filtered")
+      tmpout = Tempfile.new("rpa-filtered")
       tmpout.close
 
-      aug_open(tmpin.path, lens) do |aug|
+      aug_open(opts.merge(:root => '/', :target => tmpin.path)) do |aug|
         # Load a transform of the target, so Augeas can write into it
         aug.transform(
           :lens => lens,
@@ -139,10 +137,10 @@ eos
         aug.save!
       end
 
-      augparse(tmpout.path, lens, result)
+      augparse(result, opts.merge(:root => '/', :target => tmpout.path))
     ensure
-      tmpin.unlink
-      tmpout.unlink
+      tmpin.unlink if tmpin
+      tmpout.unlink if tmpout
     end
   end
 end

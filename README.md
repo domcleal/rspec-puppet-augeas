@@ -1,7 +1,5 @@
 # RSpec tests for Augeas resources inside Puppet manifests
 
-## Summary
-
 rspec-puppet-augeas is an extension of rodjek's popular rspec-puppet tool.  It
 adds to your RSpec tests for a single class or define (or anything resulting in
 a catalog) and allows you to run and test individual Augeas resources within it.
@@ -109,6 +107,19 @@ the resource.  Some require certain options, which can be supplied in the
   `:target` and `:lens`), returns the value of the node
 * `aug_match(path)` runs `Augeas#match(path)` against the target file (expects
   `:target` and `:lens`), returns an array of matches
+* `augparse(result)` runs the augparse utility against the target file (expects
+  `:target` and `:lens`) and verifies the file matches the `{ "key" = "value"
+  }` augparse tree notation.  Call without an argument to get the current tree
+  back.
+  * `augparse()` raises error containing `{ "key" = "value" }` tree for the
+    whole file
+  * `augparse('{ "key" = "value" }')` verifies the target matches supplied tree
+* `augparse_filter(filter, result)` takes the target file and all nodes matching
+  the given filter, then runs the resulting file through augparse as above.
+  * `augparse_filter('*[label()!="#comment"]')` raises error containing tree for
+    the filtered file (all non-comment entries)
+  * `augparse_filter('*[label()!="#comment"]', '{ "key" = "value" }')` verifies
+    the filtered file (all non-comment entries) matches supplied tree
 
 ### RSpec configuration
 

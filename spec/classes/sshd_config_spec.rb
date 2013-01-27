@@ -55,4 +55,27 @@ describe 'sshd' do
       should_not execute.idempotently
     end
   end
+
+  describe 'augparse' do
+    describe_augeas 'root login', :lens => 'Sshd', :target => 'etc/ssh/sshd_config', :fixture => 'etc/ssh/sshd_config_2' do
+      it 'should run augparse against the whole file' do
+        should execute.with_change
+        augparse('
+          { "#comment" = "Fixture 2" }
+          { "PermitRootLogin" = "yes" }
+        ')
+      end
+    end
+  end
+
+  describe 'augparse_filter' do
+    describe_augeas 'root login', :lens => 'Sshd', :target => 'etc/ssh/sshd_config', :fixture => 'etc/ssh/sshd_config_2' do
+      it 'should filter non-comments' do
+        should execute.with_change
+        augparse_filter('*[label() != "#comment"]', '
+          { "PermitRootLogin" = "yes" }
+        ')
+      end
+    end
+  end
 end
