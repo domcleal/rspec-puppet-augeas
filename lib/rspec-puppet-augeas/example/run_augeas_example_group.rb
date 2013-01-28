@@ -14,9 +14,10 @@ module RSpec::Puppet::Augeas
       #     :lens    => lens used for opening target
       def run_augeas(*args, &block)
         options = args.last.is_a?(::Hash) ? args.pop : {}
+        args << { :type => :augeas }
 
         title = "Augeas[#{args.shift}]"
-        describe(title, *args, :type => :augeas) do
+        describe(title, *args) do
           # inside here (the type augeas block), subject will be initialised
           # to the augeas resource object
 

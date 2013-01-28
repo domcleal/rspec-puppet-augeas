@@ -5,9 +5,6 @@ rvm:
 notifications:
   email:
     - dcleal@redhat.com
-matrix:
-  allow_failures:
-    - rvm: 1.8.7
 gemfile: Gemfile.ci
 before_install:
   - ./.travis.sh
