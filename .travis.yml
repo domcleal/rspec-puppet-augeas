@@ -5,6 +5,5 @@ rvm:
 notifications:
   email:
     - dcleal@redhat.com
-gemfile: Gemfile.ci
 before_install:
   - ./.travis.sh
