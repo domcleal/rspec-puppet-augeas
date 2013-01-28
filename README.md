@@ -59,7 +59,7 @@ fixtures directory.
 
 ## Usage
 
-### `describe_augeas` example group
+### describe\_augeas example group
 
 `describe_augeas` adds an example group, like describe/context, but that describes
 an Augeas resource from the catalog.  The description given to run\_augeas must
@@ -81,7 +81,7 @@ It sets the following variables inside examples:
 * `subject` (used implicitly) to an object representing the resource
 * `output_root` to the path of the fixtures directory after one run
 
-### `execute` matcher
+### execute matcher
 
 The `execute` matcher is used to check how a resource has run, e.g.
 
