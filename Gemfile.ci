@@ -1,0 +1,6 @@
+self.instance_eval(Bundler.read_file('Gemfile'))
+
+group :travis do
+  gem 'puppet'
+  gem 'ruby-augeas'
+end
