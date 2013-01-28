@@ -36,6 +36,11 @@ module RSpec::Puppet::Augeas
           class_exec(&block)
         end
       end
+
+      # Synonym for run_augeas
+      def describe_augeas(*args, &block)
+        run_augeas(*args, &block)
+      end
     end
 
     module InstanceMethods

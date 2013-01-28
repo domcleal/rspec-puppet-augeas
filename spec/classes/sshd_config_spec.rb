@@ -6,7 +6,7 @@ describe 'sshd' do
   end
 
   describe 'specify target+lens upfront, use all fixtures' do
-    run_augeas 'root login', :lens => 'Sshd', :target => 'etc/ssh/sshd_config' do
+    describe_augeas 'root login', :lens => 'Sshd', :target => 'etc/ssh/sshd_config' do
       it 'should test resource' do
         aug_get('#comment[1]').should =~ /OpenBSD/
         open_target { |f| f.readline.should =~ /OpenBSD/ }
@@ -21,7 +21,7 @@ describe 'sshd' do
   end
 
   describe 'specify fixtures as a hash' do
-    run_augeas 'root login', :fixture => { 'etc/ssh/sshd_config' => 'etc/ssh/sshd_config_2' } do
+    describe_augeas 'root login', :fixture => { 'etc/ssh/sshd_config' => 'etc/ssh/sshd_config_2' } do
       it 'should test resource with second fixture' do
         aug_get('#comment[1]', :lens => 'Sshd', :target => 'etc/ssh/sshd_config').should == 'Fixture 2'
         should execute.with_change
@@ -32,7 +32,7 @@ describe 'sshd' do
   end
 
   describe 'specify target and non-standard fixture' do
-    run_augeas 'root login', :lens => 'Sshd', :target => 'etc/ssh/sshd_config', :fixture => 'etc/ssh/sshd_config_2' do
+    describe_augeas 'root login', :lens => 'Sshd', :target => 'etc/ssh/sshd_config', :fixture => 'etc/ssh/sshd_config_2' do
       it 'should test resource with second fixture' do
         aug_get('#comment[1]').should == 'Fixture 2'
         should execute.with_change
@@ -42,7 +42,7 @@ describe 'sshd' do
     end
   end
 
-  run_augeas 'fail to add root login' do
+  describe_augeas 'fail to add root login' do
     it 'should fail to run entirely' do
       should_not execute
     end
