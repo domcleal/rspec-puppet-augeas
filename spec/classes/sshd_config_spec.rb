@@ -1,36 +1,34 @@
 require 'spec_helper'
 
+# Tests all features of rspec-puppet-augeas against the class under
+# spec/fixtures/module/sshd/manifests/init.pp
 describe 'sshd' do
+  # Basic rspec-puppet example
   it 'should have an augeas resource' do
     should contain_augeas('root login')
   end
 
+  # Basic rspec-puppet-example
+  #   uses all fixtures, lens + target are specified for aug_* functions to work
   describe 'specify target+lens upfront, use all fixtures' do
     describe_augeas 'root login', :lens => 'Sshd', :target => 'etc/ssh/sshd_config' do
       it 'should test resource' do
+        # Verify this is the right fixture, using Augeas and simple parsing
         aug_get('#comment[1]').should =~ /OpenBSD/
         open_target { |f| f.readline.should =~ /OpenBSD/ }
 
+        # Check it changes
         should execute.with_change
         aug_get('PermitRootLogin').should == 'yes'
         open_target { |f| f.read.should =~ /^PermitRootLogin\s+yes$/ }
 
+        # Idempotency test last, as a broken resource may cause false positives
         should execute.idempotently
       end
     end
   end
 
-  describe 'specify fixtures as a hash' do
-    describe_augeas 'root login', :fixture => { 'etc/ssh/sshd_config' => 'etc/ssh/sshd_config_2' } do
-      it 'should test resource with second fixture' do
-        aug_get('#comment[1]', :lens => 'Sshd', :target => 'etc/ssh/sshd_config').should == 'Fixture 2'
-        should execute.with_change
-        aug_get('PermitRootLogin', :lens => 'Sshd', :target => 'etc/ssh/sshd_config').should == 'yes'
-        should execute.idempotently
-      end
-    end
-  end
-
+  # Example of using a second fixture file to test a resource
   describe 'specify target and non-standard fixture' do
     describe_augeas 'root login', :lens => 'Sshd', :target => 'etc/ssh/sshd_config', :fixture => 'etc/ssh/sshd_config_2' do
       it 'should test resource with second fixture' do
@@ -42,6 +40,23 @@ describe 'sshd' do
     end
   end
 
+  # Fixtures can be a hash of destination path to source fixture path
+  # Note that all paths are relative to augeas_fixtures (in spec_helper.rb)
+  # and have no leading /
+  #
+  # Unusually, lens + target are specified on each aug_* function instead here.
+  describe 'specify fixtures as a hash' do
+    describe_augeas 'root login', :fixture => { 'etc/ssh/sshd_config' => 'etc/ssh/sshd_config_2' } do
+      it 'should test resource with second fixture' do
+        aug_get('#comment[1]', :lens => 'Sshd', :target => 'etc/ssh/sshd_config').should == 'Fixture 2'
+        should execute.with_change
+        aug_get('PermitRootLogin', :lens => 'Sshd', :target => 'etc/ssh/sshd_config').should == 'yes'
+        should execute.idempotently
+      end
+    end
+  end
+
+  # When incl/lens are given on the resource, :target and :lens are resolved
   describe 'target detection from resource' do
     describe_augeas 'incl root login', :fixture => 'etc/ssh/sshd_config_2' do
       it 'should test resource with second fixture at incl location' do
@@ -53,20 +68,10 @@ describe 'sshd' do
     end
   end
 
-  describe_augeas 'fail to add root login' do
-    it 'should fail to run entirely' do
-      should_not execute
-    end
-  end
-
-  run_augeas 'add root login', :lens => 'Sshd', :target => 'etc/ssh/sshd_config' do
-    it 'should fail on idempotency' do
-      should execute.with_change
-      aug_match('PermitRootLogin').size.should == 2
-      should_not execute.idempotently
-    end
-  end
-
+  # Other test utilities:
+  # augparse compares the entire fixture file to the { "key" = "value" } tree.
+  # Call augparse with no argument initially and it will print out the tree
+  # representation of the fixture file for reference.
   describe 'augparse' do
     describe_augeas 'root login', :lens => 'Sshd', :target => 'etc/ssh/sshd_config', :fixture => 'etc/ssh/sshd_config_2' do
       it 'should run augparse against the whole file' do
@@ -79,6 +84,8 @@ describe 'sshd' do
     end
   end
 
+  # augparse_filter first runs a filter against the fixture file before running
+  # it through augparse.  Here, it filters out all non-comment entries.
   describe 'augparse_filter' do
     describe_augeas 'root login', :lens => 'Sshd', :target => 'etc/ssh/sshd_config', :fixture => 'etc/ssh/sshd_config_2' do
       it 'should filter non-comments' do
@@ -87,6 +94,22 @@ describe 'sshd' do
           { "PermitRootLogin" = "yes" }
         ')
       end
+    end
+  end
+
+  # Testing for deliberate failure
+  describe_augeas 'fail to add root login' do
+    it 'should fail to run entirely' do
+      should_not execute
+    end
+  end
+
+  # Testing for deliberate idempotency failure
+  run_augeas 'add root login', :lens => 'Sshd', :target => 'etc/ssh/sshd_config' do
+    it 'should fail on idempotency' do
+      should execute.with_change
+      aug_match('PermitRootLogin').size.should == 2
+      should_not execute.idempotently
     end
   end
 end

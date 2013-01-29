@@ -57,6 +57,9 @@ fixtures directory.
 
 ## Usage
 
+Read the spec file(s) at `spec/classes/*.rb` to see various real-life examples
+of the features below.
+
 ### describe\_augeas example group
 
 `describe_augeas` adds an example group, like describe/context, but that describes
