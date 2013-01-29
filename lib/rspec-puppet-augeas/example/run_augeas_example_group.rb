@@ -22,17 +22,24 @@ module RSpec::Puppet::Augeas
           # to the augeas resource object
 
           # initialise arguments passed into the run_augeas block
-          # TODO: target can be initialised from incl if available
           target = options.delete(:target)
-          let(:target) { target }
+          let(:target) do
+            target || resource[:incl]
+          end
 
-          # TODO: ditto
           lens = options.delete(:lens)
-          let(:lens) { lens }
+          let(:lens) do
+            lens || resource[:lens]
+          end
 
           fixture = options.delete(:fixture)
-          fixture = { target => fixture } if fixture.is_a? String and target
-          let(:fixture) { fixture }
+          let(:fixture) do
+            if fixture and !fixture.is_a? Hash
+              raise ArgumentError, ":target must be supplied" unless self.target
+              fixture = { self.target => fixture.to_s }
+            end
+            fixture
+          end
 
           class_exec(&block)
         end
@@ -45,17 +52,21 @@ module RSpec::Puppet::Augeas
     end
 
     module InstanceMethods
-      # Initialises the implicit example group 'subject' to an Augeas resource
-      #
       # Requires that the title of this example group is the resource title and
       # that the parent example group subject is a catalog (use rspec-puppet)
-      def subject
+      def resource
         unless @resource
           title = self.class.description
           title = $1 if title =~ /^Augeas\[(.*)\]$/
-          @resource = Resource.new(catalogue.resource('Augeas', title), fixture)
+          @resource = catalogue.resource('Augeas', title)
         end
         @resource
+      end
+
+      # Initialises the implicit example group 'subject' to a wrapped Augeas
+      # resource
+      def subject
+        @subject ||= Resource.new(self.resource, fixture)
       end
 
       def output_root

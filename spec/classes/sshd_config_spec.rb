@@ -42,6 +42,17 @@ describe 'sshd' do
     end
   end
 
+  describe 'target detection from resource' do
+    describe_augeas 'incl root login', :fixture => 'etc/ssh/sshd_config_2' do
+      it 'should test resource with second fixture at incl location' do
+        aug_get('#comment[1]').should == 'Fixture 2'
+        should execute.with_change
+        aug_get('PermitRootLogin').should == 'yes'
+        should execute.idempotently
+      end
+    end
+  end
+
   describe_augeas 'fail to add root login' do
     it 'should fail to run entirely' do
       should_not execute

@@ -4,6 +4,12 @@ class sshd {
     changes => 'set PermitRootLogin yes',
   }
 
+  augeas { "incl root login":
+    incl    => '/etc/ssh/sshd_config',
+    lens    => 'Sshd.lns',
+    changes => 'set PermitRootLogin yes',
+  }
+
   augeas { "add root login":
     context => '/files/etc/ssh/sshd_config',
     changes => [

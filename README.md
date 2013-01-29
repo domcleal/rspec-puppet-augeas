@@ -69,13 +69,14 @@ It takes optional hash arguments:
   * a hash of fixtures to copy from the source (under augeas\_fixtures) to a
     destination path, e.g. `{ 'dest/file/location' => 'src/file/location' }`
   * a string of the source path, copied to the path given by the resource's
-    `incl` parameter (TODO: or `:target`)
+    `incl` parameter or `:target`
   * nil, by default copies all fixtures
 * `:target` is the path of the file that the resource should modify 
 * `:lens` is the lens to use when opening the target file (for `aug_*` etc.)
 
 It sets the following variables inside examples:
 
+* `resource` to the Puppet resource object
 * `subject` (used implicitly) to an object representing the resource
 * `output_root` to the path of the fixtures directory after one run
 
