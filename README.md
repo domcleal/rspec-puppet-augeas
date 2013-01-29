@@ -23,7 +23,7 @@ Extend your usual rspec-puppet class test, e.g. for the 'sshd' class:
       end
 
       # Expects Augeas['root login']
-      describe_augeas 'root login' do
+      describe_augeas 'root login', :lens => 'Sshd', :target => 'etc/ssh/sshd_config' do
         it 'should change PermitRootLogin' do
           # Run the resource against the fixtures, check it changed
           should execute.with_change
