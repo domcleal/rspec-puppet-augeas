@@ -7,4 +7,5 @@ gem 'ruby-augeas'
 group :test do
   gem 'puppet'
   gem 'rake'
+  gem 'simplecov'
 end
