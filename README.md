@@ -132,6 +132,11 @@ New RSpec configuration options:
 * `augeas_fixtures` is the path to the root of the fixtures directory
   containing source files
 
+## Background reading
+
+This module inherited code from the tests used in [augeasproviders](http://augeasproviders.com).
+The test methodology is described in [Testing techniques for Puppet providers using Augeas](http://augeasproviders.com/documentation/specs.html).
+
 ## Issues
 
 Please file any issues or suggestions [on GitHub](https://github.com/domcleal/rspec-puppet-augeas/issues).
