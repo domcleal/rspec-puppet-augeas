@@ -22,4 +22,9 @@ class sshd {
     context => '/files/etc/ssh/sshd_config',
     changes => 'ins PermitRootLogin after *[last()]',
   }
+
+  augeas { "make no change":
+    context => '/files/etc/ssh/sshd_config',
+    changes => 'set /foo bar',
+  }
 }

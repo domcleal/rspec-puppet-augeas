@@ -33,12 +33,19 @@ module RSpec::Puppet::Augeas
       end
     end
 
-    # Runs a particular resource via a catalog
-    def apply(resource)
+    # Runs a particular resource via a catalog and stores logs in the caller's
+    # supplied array
+    def apply(resource, logs)
+      logs.clear
+      Puppet::Util::Log.newdestination(Puppet::Test::LogCollector.new(logs))
+
       catalog = Puppet::Resource::Catalog.new
       catalog.add_resource resource
       catalog = catalog.to_ral if resource.is_a? Puppet::Resource
-      catalog.apply
+      txn = catalog.apply
+
+      Puppet::Util::Log.close_all
+      txn
     end
   end
 end

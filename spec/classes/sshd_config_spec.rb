@@ -33,6 +33,11 @@ describe 'sshd' do
     describe_augeas 'root login', :lens => 'Sshd', :target => 'etc/ssh/sshd_config', :fixture => 'etc/ssh/sshd_config_2' do
       it 'should test resource with second fixture' do
         aug_get('#comment[1]').should == 'Fixture 2'
+
+        # Example of increasing logging, which captures augeas provider's
+        # debug logging on failure
+        Puppet::Util::Log.level = 'debug'
+
         should execute.with_change
         aug_get('PermitRootLogin').should == 'yes'
         should execute.idempotently
@@ -100,7 +105,29 @@ describe 'sshd' do
   # Testing for deliberate failure
   describe_augeas 'fail to add root login' do
     it 'should fail to run entirely' do
+      # Deliberate failure means this is inverted with "not"
       should_not execute
+
+      # Verify the matcher message contains logs
+      e = execute
+      e.matches? subject
+      e.description.should =~ /should execute/
+      e.failure_message_for_should.should =~ /^err:.*false/
+      e.failure_message_for_should_not.should =~ /^err:.*false/
+    end
+  end
+
+  # Testing for deliberate no-op
+  run_augeas 'make no change' do
+    it 'should fail on with_change' do
+      should_not execute.with_change
+
+      # Verify the matcher message contains logs
+      e = execute
+      e.with_change.matches? subject
+      e.description.should =~ /should change successfully/
+      e.failure_message_for_should.should =~ /doesn't change/
+      e.failure_message_for_should_not.should =~ /changes/
     end
   end
 
@@ -110,6 +137,13 @@ describe 'sshd' do
       should execute.with_change
       aug_match('PermitRootLogin').size.should == 2
       should_not execute.idempotently
+
+      # Verify the matcher message contains logs
+      e = execute
+      e.idempotently.matches? subject
+      e.description.should =~ /should change once only/
+      e.failure_message_for_should.should =~ /^notice:.*success/
+      e.failure_message_for_should_not.should =~ /^notice:.*success/
     end
   end
 end

@@ -43,24 +43,29 @@ module RSpec::Puppet::Augeas::Matchers
     end
 
     def failure_message_for_should
-      # FIXME: the branch should depend on outcome, not chaining
-      if idempotent
-        "#{resource} isn't idempotent, it changes on every run"
-      elsif change
-        "#{resource} doesn't change when executed"
-      else
-        "#{resource} fails when executed"
+      if resource.txn.any_failed?
+        "#{resource} fails when executing:\n#{format_logs(resource.logs)}"
+      elsif change and !resource.txn.changed?.any?
+        "#{resource} doesn't change when executed:\n#{format_logs(resource.logs)}"
+      elsif idempotent and resource.idempotent.changed?.any?
+        "#{resource} isn't idempotent, it changes on every run:\n#{format_logs(resource.logs_idempotent)}"
       end
     end
 
     def failure_message_for_should_not
-      if idempotent
-        "#{resource} is idempotent, it doesn't change on every run"
-      elsif change
-        "#{resource} changes when executed"
-      else
-        "#{resource} succeeds when executed"
+      if resource.txn.any_failed?
+        "#{resource} succeeds when executed:\n#{format_logs(resource.logs)}"
+      elsif change and !resource.txn.changed?.any?
+        "#{resource} changes when executed:\n#{format_logs(resource.logs)}"
+      elsif idempotent and resource.idempotent.changed?.any?
+        "#{resource} is idempotent, it doesn't change on every run:\n#{format_logs(resource.logs_idempotent)}"
       end
+    end
+
+    private
+
+    def format_logs(logs)
+      logs.map { |log| "#{log.level}: #{log.message}" }.join("\n")
     end
   end
 
