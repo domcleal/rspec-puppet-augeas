@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'rspec-puppet-augeas'
-  s.version = '0.2.0'
+  s.version = '0.2.1'
   s.homepage = 'https://github.com/domcleal/rspec-puppet-augeas/'
   s.summary = 'RSpec tests for Augeas resources in Puppet manifests'
   s.description = 'RSpec tests for Augeas resources in Puppet manifests'
@@ -29,6 +29,7 @@ Gem::Specification.new do |s|
   ]
 
   s.add_dependency 'rspec-puppet'
+  s.add_dependency 'puppetlabs_spec_helper'
 
   s.authors = ['Dominic Cleal']
   s.email = 'dcleal@redhat.com'
