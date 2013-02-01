@@ -38,6 +38,7 @@ module RSpec::Puppet::Augeas
     def apply(resource, logs)
       logs.clear
       Puppet::Util::Log.newdestination(Puppet::Test::LogCollector.new(logs))
+      Puppet::Util::Log.level = 'debug'
 
       catalog = Puppet::Resource::Catalog.new
       catalog.add_resource resource

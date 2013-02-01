@@ -132,16 +132,6 @@ New RSpec configuration options:
 * `augeas_fixtures` is the path to the root of the fixtures directory
   containing source files
 
-## Puppet configuration
-
-The logging level of Puppet can be changed, so in the case of failure, debug
-logs from the provider and Augeas will be printed.  This can be done inside
-a test or before all tests:
-
-    before :each do
-      Puppet::Util::Log.level = 'debug'
-    end
-
 ## Background reading
 
 This module inherited code from the tests used in [augeasproviders](http://augeasproviders.com).

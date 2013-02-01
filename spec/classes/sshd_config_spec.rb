@@ -114,6 +114,10 @@ describe 'sshd' do
       e.description.should =~ /should execute/
       e.failure_message_for_should.should =~ /^err:.*false/
       e.failure_message_for_should_not.should =~ /^err:.*false/
+      # Check for debug logs
+      e.failure_message_for_should.should =~ /^debug:.*Opening augeas/
+      # Ignore transaction stuff
+      e.failure_message_for_should.split("\n").grep(/Finishing transaction/).empty?.should be_true
     end
   end
 

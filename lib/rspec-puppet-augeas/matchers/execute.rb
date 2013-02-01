@@ -65,6 +65,14 @@ module RSpec::Puppet::Augeas::Matchers
     private
 
     def format_logs(logs)
+      # Sometimes two transactions are run, sometimes one, so filter out the
+      # first (it appears the idempotent test only sees one txn)
+      if logs.map { |log| log.message }.grep(/Finishing transaction/).size > 1
+        logs = logs.clone.drop_while { |log| log.message !~ /Finishing transaction/ }
+        logs.shift
+      end
+      # Ignore everything after the txn end
+      logs = logs.take_while { |log| log.message !~ /Finishing transaction/ }
       logs.map { |log| "#{log.level}: #{log.message}" }.join("\n")
     end
   end
