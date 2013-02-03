@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.2
+* capture debug logs from resource catalog run
+* fixed actual cause in failure messages
+
 ## 0.2.1
 * detect lens/target options from resource lens/incl
 * improve docs and examples in spec/ files
