@@ -60,6 +60,9 @@ fixtures directory.
 Read the spec file(s) at `spec/classes/*.rb` to see various real-life examples
 of the features below.
 
+Also see [rspec-puppet-augeas-example](https://github.com/domcleal/rspec-puppet-augeas-example)
+for a typical working project.
+
 ### describe\_augeas example group
 
 `describe_augeas` adds an example group, like describe/context, but that describes
