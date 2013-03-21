@@ -40,6 +40,7 @@ module RSpec::Puppet::Augeas
       Puppet::Util::Log.newdestination(Puppet::Test::LogCollector.new(logs))
       Puppet::Util::Log.level = 'debug'
 
+      [:require, :before, :notify, :subscribe].each { |p| resource.delete p }
       catalog = Puppet::Resource::Catalog.new
       catalog.add_resource resource
       catalog = catalog.to_ral if resource.is_a? Puppet::Resource

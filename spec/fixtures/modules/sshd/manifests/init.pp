@@ -1,7 +1,12 @@
 class sshd {
+  file { '/etc/ssh/sshd_config':
+    ensure => present,
+  }
+
   augeas { "root login":
     context => '/files/etc/ssh/sshd_config',
     changes => 'set PermitRootLogin yes',
+    require => File['/etc/ssh/sshd_config'],
   }
 
   augeas { "incl root login":
