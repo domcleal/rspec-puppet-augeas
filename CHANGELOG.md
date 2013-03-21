@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.3
+* ignore metaparameters, fixes #1
+
 ## 0.2.2
 * capture debug logs from resource catalog run
 * fixed actual cause in failure messages
