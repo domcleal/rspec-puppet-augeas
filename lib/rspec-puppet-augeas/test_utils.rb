@@ -86,7 +86,7 @@ module Test_Rspec_Puppet_Augeas =
 eos
         end
 
-        output = %x(augparse #{testaug} 2>&1)
+        output = %x(augparse --notypecheck #{testaug} 2>&1)
         raise RSpec::Puppet::Augeas::Error, "augparse failed:\n#{output}" unless $? == 0 && output.empty?
       end
     end
