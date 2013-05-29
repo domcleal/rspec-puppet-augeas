@@ -31,8 +31,9 @@ module RSpec::Puppet::Augeas
       lens = opts[:lens] || self.lens or raise ArgumentError, ":lens must be supplied"
       lens = "#{lens}.lns" unless lens.include? '.'
       root = opts[:root] || self.output_root
+      lensdir = RSpec.configuration.augeas_lensdir || nil
 
-      aug = Augeas.open(root, nil, Augeas::NO_MODL_AUTOLOAD)
+      aug = Augeas.open(root, lensdir, Augeas::NO_MODL_AUTOLOAD)
       begin
         aug.transform(
           :lens => lens,
