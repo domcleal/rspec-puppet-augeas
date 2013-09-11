@@ -13,6 +13,8 @@ Augeas-based tools to help verify the modification was made.
 Install the gem first:
 
     gem install rspec-puppet-augeas
+    
+**Note:** The `ruby-augeas` gem and the augeas tools and development libraries are also required.
 
 Extend your usual rspec-puppet class test, e.g. for the 'sshd' class:
 
@@ -134,6 +136,43 @@ New RSpec configuration options:
 
 * `augeas_fixtures` is the path to the root of the fixtures directory
   containing source files
+
+## Travis configuration
+
+It is possible to add `rspec-puppet-augeas` to your [Travis](https://travis-ci.org) configuration. This requires the following additions to your Travis configuration files:
+
+### Changes to `.travis.yml`
+
+The augeas packages need to be installed in the `before_install` block:
+
+```yml
+before_install:
+  - sudo apt-get install -qq augeas-tools augeas-lenses libaugeas-dev
+```
+
+### Changes to `Gemfile`
+
+The `rcpec-puppet-augeas` and `ruby-augeas` gems need to be added into the development and test group:
+
+```ruby
+group :development, :test do
+  gem 'puppetlabs_spec_helper', :require => false
+  gem 'ruby-augeas', :require => false
+  gem 'rspec-puppet-augeas', :require => false
+end
+```
+
+### Changes to `spec/spec_helper.rb`
+
+These changes bring the fixtures required for `rspec-puppet-augeas` to work:
+
+```ruby
+require 'puppetlabs_spec_helper/module_spec_helper'
+require 'rspec-puppet-augeas'
+RSpec.configure do |c|
+  c.augeas_fixtures = File.join(File.dirname(File.expand_path(__FILE__)), 'fixtures', 'augeas')
+end
+```
 
 ## Background reading
 
