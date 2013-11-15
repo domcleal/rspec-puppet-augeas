@@ -34,11 +34,11 @@ module RSpec::Puppet::Augeas::Matchers
 
     def description
       if idempotent
-        "should change once only (idempotently)"
+        "change once only (idempotently)"
       elsif change
-        "should change successfully at least once"
+        "change successfully at least once"
       else
-        "should execute without failure"
+        "execute without failure"
       end
     end
 
