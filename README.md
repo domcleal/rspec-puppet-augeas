@@ -55,6 +55,16 @@ fixtures directory.
       c.augeas_fixtures = File.join(File.dirname(File.expand_path(__FILE__)), 'fixtures', 'augeas')
     end
 
+If you have custom lenses in your module dir, puppetlabs_spec_helper will deal with the
+augeas libdir. You will however have to let the rspec-puppet-augeas module know they
+are not in your default augeas lens dir. You can do so by using configuring the augeas_lensdir.
+
+    require 'rspec-puppet-augeas'
+    RSpec.configure do |c|
+      c.augeas_fixtures = File.join(File.dirname(File.expand_path(__FILE__)), 'fixtures', 'augeas')
+      c.augeas_lensdir = File.join(File.dirname(File.expand_path(__FILE__)), '..', 'lib/augeas/lenses')
+    end
+
 ## Usage
 
 Read the spec file(s) at `spec/classes/*.rb` to see various real-life examples
