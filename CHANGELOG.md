@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.0
+* add `augeas_lensdir` setting to add lenses to the Augeas load path (Jan
+  Vansteenkiste)
+* redefine idempotency to not also imply changes were made, fixes #7
+* remove redundant 'should' from matcher descriptions (Aaron Hicks)
+* add Travis CI instructions (Aaron Hicks)
+* use --notypecheck to speed up augparse
+* pin rspec-puppet to < 1.0.0 temporarily
+
 ## 0.2.3
 * ignore metaparameters, fixes #1
 
