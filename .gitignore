@@ -4,3 +4,4 @@ pkg/
 Gemfile.local
 Gemfile.lock
 .ruby-*
+.project

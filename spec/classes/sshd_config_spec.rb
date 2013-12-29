@@ -111,7 +111,7 @@ describe 'sshd' do
       # Verify the matcher message contains logs
       e = execute
       e.matches? subject
-      e.description.should =~ /should execute/
+      e.description.should =~ /execute/
       e.failure_message_for_should.should =~ /^err:.*false/
       e.failure_message_for_should_not.should =~ /^err:.*false/
       # Check for debug logs
@@ -129,7 +129,7 @@ describe 'sshd' do
       # Verify the matcher message contains logs
       e = execute
       e.with_change.matches? subject
-      e.description.should =~ /should change successfully/
+      e.description.should =~ /change successfully/
       e.failure_message_for_should.should =~ /doesn't change/
       e.failure_message_for_should_not.should =~ /changes/
     end
@@ -145,7 +145,7 @@ describe 'sshd' do
       # Verify the matcher message contains logs
       e = execute
       e.idempotently.matches? subject
-      e.description.should =~ /should change once only/
+      e.description.should =~ /change once only/
       e.failure_message_for_should.should =~ /^notice:.*success/
       e.failure_message_for_should_not.should =~ /^notice:.*success/
     end
