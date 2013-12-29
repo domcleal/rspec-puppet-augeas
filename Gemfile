@@ -1,4 +1,4 @@
-source :rubygems
+source 'https://rubygems.org'
 
 gem 'puppetlabs_spec_helper'
 gem 'rspec-puppet'
@@ -9,3 +9,5 @@ group :test do
   gem 'rake'
   gem 'simplecov'
 end
+
+self.instance_eval(Bundler.read_file('Gemfile.local')) if File.exist? 'Gemfile.local'

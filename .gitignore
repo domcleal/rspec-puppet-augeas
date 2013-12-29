@@ -1,4 +1,6 @@
 coverage/
 pkg/
 *.gem
+Gemfile.local
 Gemfile.lock
+.ruby-*
