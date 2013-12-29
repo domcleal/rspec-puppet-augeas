@@ -152,7 +152,7 @@ before_install:
 
 ### Changes to `Gemfile`
 
-The `rcpec-puppet-augeas` and `ruby-augeas` gems need to be added into the development and test group:
+The `rspec-puppet-augeas` and `ruby-augeas` gems need to be added into the development and test group:
 
 ```ruby
 group :development, :test do
