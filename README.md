@@ -109,7 +109,7 @@ The `execute` matcher is used to check how a resource has run, e.g.
 It has methods to add to the checks it performs:
 
 * `with_change` ensures the resource was "applied" and didn't no-op
-* `idempotently` runs the resource again to ensure it only applies once
+* `idempotently` runs the resource again to ensure it applies a maximum of once
 
 ### Test utilities
 

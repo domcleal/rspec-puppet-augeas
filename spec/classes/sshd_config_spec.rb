@@ -133,6 +133,21 @@ describe 'sshd' do
       e.failure_message_for_should.should =~ /doesn't change/
       e.failure_message_for_should_not.should =~ /changes/
     end
+
+    it 'should be considered idempotent' do
+      should execute.idempotently
+    end
+
+    it 'should fail with both with_change and idempotently' do
+      should_not execute.with_change.idempotently
+
+      # Verify the matcher message contains logs
+      e = execute
+      e.with_change.idempotently.matches? subject
+      e.description.should =~ /change once only/
+      e.failure_message_for_should.should =~ /doesn't change/
+      e.failure_message_for_should_not.should =~ /changes/
+    end
   end
 
   # Testing for deliberate idempotency failure
@@ -145,7 +160,7 @@ describe 'sshd' do
       # Verify the matcher message contains logs
       e = execute
       e.idempotently.matches? subject
-      e.description.should =~ /change once only/
+      e.description.should =~ /change at most once/
       e.failure_message_for_should.should =~ /^notice:.*success/
       e.failure_message_for_should_not.should =~ /^notice:.*success/
     end

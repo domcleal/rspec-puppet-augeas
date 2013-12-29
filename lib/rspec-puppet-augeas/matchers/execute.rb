@@ -25,16 +25,17 @@ module RSpec::Puppet::Augeas::Matchers
       self
     end
 
-    # verifies the resource only applies once
+    # verifies the resource only applies never or once at max
     def idempotently
-      @change = true
       @idempotent = true
       self
     end
 
     def description
-      if idempotent
+      if idempotent && change
         "change once only (idempotently)"
+      elsif idempotent
+        "change at most once (idempotently)"
       elsif change
         "change successfully at least once"
       else
