@@ -88,7 +88,7 @@ eos
         end
 
         output = %x(augparse --notypecheck #{testaug} 2>&1)
-        raise RSpec::Puppet::Augeas::Error, "augparse failed:\n#{output}" unless $? == 0 && output.empty?
+        raise RSpec::Puppet::Augeas::Error, "augparse failed:\n#{output}" unless $? == 0
       end
     end
 
