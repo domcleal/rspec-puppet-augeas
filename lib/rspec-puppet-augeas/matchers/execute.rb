@@ -13,6 +13,7 @@ module RSpec::Puppet::Augeas::Matchers
 
     def matches?(resource)
       @resource = resource
+      RSpec::Puppet::Coverage.cover!(resource)
       return false if resource.txn.any_failed?
       return false if change and !resource.txn.changed?.any?
       return false if idempotent and resource.idempotent.changed?.any?
