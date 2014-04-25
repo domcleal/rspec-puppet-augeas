@@ -28,7 +28,7 @@ Gem::Specification.new do |s|
     'spec/spec_helper.rb'
   ]
 
-  s.add_dependency 'rspec-puppet', '< 1.0.0'
+  #s.add_dependency 'rspec-puppet', '< 1.0.0'
   s.add_dependency 'puppetlabs_spec_helper'
 
   s.authors = ['Dominic Cleal']
