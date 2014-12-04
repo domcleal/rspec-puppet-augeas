@@ -40,6 +40,10 @@ module RSpec::Puppet::Augeas
       Puppet::Util::Log.newdestination(Puppet::Test::LogCollector.new(logs))
       Puppet::Util::Log.level = 'debug'
 
+      confdir = Dir.mktmpdir
+      oldconfdir = Puppet[:confdir]
+      Puppet[:confdir] = confdir
+
       [:require, :before, :notify, :subscribe].each { |p| resource.delete p }
       catalog = Puppet::Resource::Catalog.new
       catalog.add_resource resource
@@ -48,6 +52,11 @@ module RSpec::Puppet::Augeas
 
       Puppet::Util::Log.close_all
       txn
+    ensure
+      if confdir
+        Puppet[:confdir] = oldconfdir
+        FileUtils.rm_rf(confdir)
+      end
     end
   end
 end
