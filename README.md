@@ -14,7 +14,8 @@ Install the gem first:
 
     gem install rspec-puppet-augeas
     
-**Note:** The `ruby-augeas` gem and the augeas tools and development libraries are also required.
+**Note:** The augeas tools and development libraries are also required to
+install the ruby-augeas dependency.
 
 Extend your usual rspec-puppet class test, e.g. for the 'sshd' class:
 
@@ -162,12 +163,11 @@ before_install:
 
 ### Changes to `Gemfile`
 
-The `rspec-puppet-augeas` and `ruby-augeas` gems need to be added into the development and test group:
+The `rspec-puppet-augeas` gem needs to be added into the development and test group:
 
 ```ruby
 group :development, :test do
   gem 'puppetlabs_spec_helper', :require => false
-  gem 'ruby-augeas', :require => false
   gem 'rspec-puppet-augeas', :require => false
 end
 ```

@@ -1,8 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'puppetlabs_spec_helper'
-gem 'rspec-puppet', '>= 2.0.0'
-gem 'ruby-augeas'
+gemspec
 
 group :test do
   gem 'puppet'

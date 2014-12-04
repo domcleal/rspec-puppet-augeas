@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'rspec-puppet', '>= 2.0.0'
   s.add_dependency 'puppetlabs_spec_helper'
+  s.add_dependency 'ruby-augeas'
 
   s.authors = ['Dominic Cleal']
   s.email = 'dcleal@redhat.com'
