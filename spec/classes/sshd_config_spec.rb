@@ -112,8 +112,8 @@ describe 'sshd' do
       e = execute
       e.matches? subject
       e.description.should =~ /execute/
-      e.failure_message_for_should.should =~ /^err:.*false/
-      e.failure_message_for_should_not.should =~ /^err:.*false/
+      e.failure_message_for_should.should =~ /^err:.*(false|failed)/
+      e.failure_message_for_should_not.should =~ /^err:.*(false|failed)/
       # Check for debug logs
       e.failure_message_for_should.should =~ /^debug:.*Opening augeas/
       # Ignore transaction stuff
