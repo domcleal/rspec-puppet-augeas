@@ -117,7 +117,7 @@ describe 'sshd' do
       # Check for debug logs
       e.failure_message_for_should.should =~ /^debug:.*Opening augeas/
       # Ignore transaction stuff
-      e.failure_message_for_should.split("\n").grep(/Finishing transaction/).empty?.should be_true
+      e.failure_message_for_should.split("\n").grep(/Finishing transaction/).empty?.should eq(true)
     end
   end
 
