@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0
+* unpin rspec-puppet, now require >= 2.0.0, fixes #9
+* stop managing /etc/puppet, fixes #14, #15
+* enable code coverage with rspec-puppet, fixes #13 (Matt Callaway)
+* add ruby-augeas as a dependency, fixes #6
+* fix tests on rspec 3 and recent Puppet versions
+
 ## 0.3.0
 * add `augeas_lensdir` setting to add lenses to the Augeas load path (Jan
   Vansteenkiste)
