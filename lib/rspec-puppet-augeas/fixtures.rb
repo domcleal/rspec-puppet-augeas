@@ -40,9 +40,19 @@ module RSpec::Puppet::Augeas
       Puppet::Util::Log.newdestination(Puppet::Test::LogCollector.new(logs))
       Puppet::Util::Log.level = 'debug'
 
-      confdir = Dir.mktmpdir
       oldconfdir = Puppet[:confdir]
+      olduser = Puppet[:user]
+      oldgroup = Puppet[:group]
+
+      confdir = Dir.mktmpdir
+      user = Etc.getpwuid(Process.uid).name
+      group = Etc.getgrgid(Etc.getpwnam(user).gid).name
+
       Puppet[:confdir] = confdir
+      if Process.uid != 0
+        Puppet[:user] = user
+        Puppet[:group] = group
+      end
 
       [:require, :before, :notify, :subscribe].each { |p| resource.delete p }
       catalog = Puppet::Resource::Catalog.new
@@ -56,6 +66,12 @@ module RSpec::Puppet::Augeas
       if confdir
         Puppet[:confdir] = oldconfdir
         FileUtils.rm_rf(confdir)
+      end
+      if user
+        Puppet[:user] = olduser
+      end
+      if group
+        Puppet[:group] = oldgroup
       end
     end
   end
