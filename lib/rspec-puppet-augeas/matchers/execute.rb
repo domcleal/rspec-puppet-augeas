@@ -44,7 +44,7 @@ module RSpec::Puppet::Augeas::Matchers
       end
     end
 
-    def failure_message_for_should
+    def failure_message
       if resource.txn.any_failed?
         "#{resource} fails when executing:\n#{format_logs(resource.logs)}"
       elsif change and !resource.txn.changed?.any?
@@ -54,7 +54,7 @@ module RSpec::Puppet::Augeas::Matchers
       end
     end
 
-    def failure_message_for_should_not
+    def failure_message_when_negated
       if resource.txn.any_failed?
         "#{resource} succeeds when executed:\n#{format_logs(resource.logs)}"
       elsif change and !resource.txn.changed?.any?

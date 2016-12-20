@@ -112,12 +112,12 @@ describe 'sshd' do
       e = execute
       e.matches? subject
       e.description.should =~ /execute/
-      e.failure_message_for_should.should =~ /^err:.*(false|failed)/
-      e.failure_message_for_should_not.should =~ /^err:.*(false|failed)/
+      e.failure_message.should =~ /^err:.*(false|failed)/
+      e.failure_message_when_negated.should =~ /^err:.*(false|failed)/
       # Check for debug logs
-      e.failure_message_for_should.should =~ /^debug:.*Opening augeas/
+      e.failure_message.should =~ /^debug:.*Opening augeas/
       # Ignore transaction stuff
-      e.failure_message_for_should.split("\n").grep(/Finishing transaction/).empty?.should eq(true)
+      e.failure_message.split("\n").grep(/Finishing transaction/).empty?.should eq(true)
     end
   end
 
@@ -130,8 +130,8 @@ describe 'sshd' do
       e = execute
       e.with_change.matches? subject
       e.description.should =~ /change successfully/
-      e.failure_message_for_should.should =~ /doesn't change/
-      e.failure_message_for_should_not.should =~ /changes/
+      e.failure_message.should =~ /doesn't change/
+      e.failure_message_when_negated.should =~ /changes/
     end
 
     it 'should be considered idempotent' do
@@ -145,8 +145,8 @@ describe 'sshd' do
       e = execute
       e.with_change.idempotently.matches? subject
       e.description.should =~ /change once only/
-      e.failure_message_for_should.should =~ /doesn't change/
-      e.failure_message_for_should_not.should =~ /changes/
+      e.failure_message.should =~ /doesn't change/
+      e.failure_message_when_negated.should =~ /changes/
     end
   end
 
@@ -161,8 +161,8 @@ describe 'sshd' do
       e = execute
       e.idempotently.matches? subject
       e.description.should =~ /change at most once/
-      e.failure_message_for_should.should =~ /^notice:.*success/
-      e.failure_message_for_should_not.should =~ /^notice:.*success/
+      e.failure_message.should =~ /^notice:.*success/
+      e.failure_message_when_negated.should =~ /^notice:.*success/
     end
   end
 end
